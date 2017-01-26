@@ -1,0 +1,216 @@
+{% extends "header.html" %}
+
+{% block content %}
+
+<div class="container">
+    <!-- Step 2 -->
+    <h1><center>You searched for {{ career }}</center></h1>
+
+    <br>
+    <h2>Here are some ranked job listings</h2>
+    {% for listing, strength, job_title in suggestions %}
+        <p> We suggest <a href="http://www.indeed.com/{{ listing }}">{{ job_title }}</a> with strength <b>{{ strength }}</b></p>
+    {% endfor %}
+
+    {% if skill_sugg_len > 0 %}
+        <br>
+        <h2>Learn these {{ career }} skills:</h2>
+        {% for skill, strength, complexity in skill_suggestions %}
+            <p> We suggest <b>{{ skill }}</b> with strength <b>{{ strength }}</b> based on <b>{{ complexity }}</b> of your skills</p>
+        {% endfor %}
+
+        <!-- Modal -->
+    <br>
+        <center>
+        <p> If one of our skill suggestions makes no sense, please help us improve by <a href="#" data-toggle="modal" data-target="#RemoveSkillModal">reporting a problematic suggestion</a>.</p>
+        </center>
+    <br>    
+
+    <div class="modal fade" id="RemoveSkillModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel3" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <button type="button" class="close" 
+                       data-dismiss="modal">
+                           <span aria-hidden="true">&times;</span>
+                           <span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel3">
+                        Did we present a poor skill recommendation?  Help us improve by entering it below:
+                    </h4>
+                </div>
+                
+                <!-- Modal Body -->
+                <div class="modal-body">
+                    <form class="form-horizontal" role="form" action="{{ url_for('delete_skill_from_db') }}" method=post>
+                      <div class="form-group">
+                        <label  class="col-sm-2 control-label"
+                                  for="UserRecommendedDelete">Enter Problematic Skill:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" 
+                            id="UserRecommendedDelete" placeholder="skill" name="UserRecommendedDelete"/>
+                        </div>
+                      </div>        
+                </div>
+                
+                <!-- Modal Footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default"
+                            data-dismiss="modal">
+                                Close
+                    </button>
+                    <button type="button" class="btn btn-primary">
+                        Submit
+                    </button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="wrapper">
+    </div>
+
+
+    <script>
+        //set up data arrays
+        var skills = {{ final_suggestions | safe}};
+        var complexity = {{ final_complexity | safe}};
+        var confidence = {{ final_confidence | safe}};
+        var user_skills =['test1','test2','test3'];
+
+        //aribtary scaling of strength
+        var x_max = 4;
+        for(var i=0; i<confidence.length; i++) {
+            confidence[i] *= x_max;
+        }
+
+        //set up wire grid on plot
+        // 25 lines, evenly spaced
+        var num_grid_lines = 5
+        var grid_spacing = 720/(num_grid_lines-1)
+        var grid = d3.range(num_grid_lines).map(function(i){
+            return {'x1':0,'y1':0,'x2':0,'y2':470};
+        });
+
+        //set up x and y scaling for bars
+        //720 is 24 lines * 30 spacing between them
+        var xscale = d3.scale.linear()
+                        .domain([0,x_max])
+                        .range([0,720]);
+
+        var yscale = d3.scale.linear()
+                        .domain([0,skills.length])
+                        .range([30,480]);
+
+        // set up canvas
+        var canvas = d3.select('#wrapper')
+                        .append('svg')
+                        .attr({'width':900,'height':550});
+
+        // draw grid lines on the canvas
+        var grids = canvas.append('g')
+                          .attr('id','grid')
+                          .attr('transform','translate(150,10)')
+                          .selectAll('line')
+                          .data(grid)
+                          .enter()
+                          .append('line')
+                          .attr({'x1':function(d,i){ return i*grid_spacing; },
+                                 'y1':function(d){ return d.y1; },
+                                 'x2':function(d,i){ return i*grid_spacing; },
+                                 'y2':function(d){ return d.y2; },
+                            })
+                          .style({'stroke':'#adadad','stroke-width':'1px'});
+
+        // set up scaling for user skills
+        var user_yscale = d3.scale.linear()
+                        .domain([0,user_skills.length])
+                        .range([30,480]);
+
+        //Draw user skills to left of bars
+        var test_txt = canvas.append('g').selectAll('text')
+                            .data(user_skills)
+                            .enter()
+                            .append('text')
+                            .attr({'x':function(d) {return 0; },'y':function(d,i){ return user_yscale(i)+30; }})
+                            .text(function(d){ return d; });
+                          
+        //Draw paths connect user skills to the associated skill suggestions
+
+        //set up x-axis
+        var experienceName = ["", "Weak","Medium","Strong","Very Strong"];
+        var formatSkillPoints = function (d) {
+            return experienceName[d % 5];
+        }
+        var xAxis = d3.svg.axis();
+            xAxis
+                .orient('bottom')
+                .scale(xscale)
+                .ticks(5)
+            .tickFormat(formatSkillPoints);
+
+        //set up y-axis
+        var yAxis = d3.svg.axis();
+            yAxis
+                .orient('left')
+                .scale(yscale)
+                .tickSize(0)
+                .tickFormat("");
+
+                //.tickValues(d3.range(17));
+                //.tickFormat(function(d,i){ return skills[i]; })
+
+        //draw x-axis
+        var x_xis = canvas.append('g')
+                          .attr("transform", "translate(150,480)")
+                          .attr('id','xaxis')
+                          .call(xAxis);
+
+        //draw y-axis
+        var y_xis = canvas.append('g')
+                          .attr("transform", "translate(150,0)")
+                          .attr('id','yaxis')
+                          .call(yAxis);
+
+
+        // draw bars
+        var chart = canvas.append('g')
+                            .attr("transform", "translate(150,0)")
+                            .attr('id','bars')
+                            .selectAll('rect')
+                            .data(confidence)
+                            .enter()
+                            .append('rect')
+                            .attr('height',19)
+                            .attr({'x':0,'y':function(d,i){ return yscale(i)-9; }})
+                            .attr('width',function(d){ return 0; });
+
+
+        var transit = d3.select("svg").selectAll("rect")
+                            .data(confidence)
+                            .transition()
+                            .duration(1000) 
+                            .attr("width", function(d) {return xscale(d); });
+
+        // text on bars
+        var transitext = d3.select('#bars')
+                            .selectAll('text')
+                            .data(skills)
+                            .enter()
+                            .append('text')
+                            .attr({'x':function(d) {return 10; },'y':function(d,i){ return yscale(i)+5; }})
+                            .text(function(d){ return d; }).style({'fill':'#fff','font-size':'14px'});
+
+
+    </script>
+
+
+    {% endif %}
+
+</div>
+
+
+{% endblock %}

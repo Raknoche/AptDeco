@@ -1,0 +1,73 @@
+<html>
+<head>
+    <title>AptDeco App</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+
+    <!-- JQuery and JS -->
+    <link href="//code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" rel="Stylesheet"></link>
+    <script src="//code.jquery.com/jquery-2.2.0.min.js"></script>
+    <script src="//code.jquery.com/ui/1.10.2/jquery-ui.js" ></script>
+
+    <!-- Then include bootstrap js -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+
+    <!-- D3 -->
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <style>
+    #xaxis .domain {
+        fill:none;
+        stroke:#000;
+    }
+    #xaxis text, #yaxis text {
+        font-size: 12px;
+    }
+    </style>
+    
+
+    <!-- Use for editing default Bootstap -->
+    <style>
+    .jumbotron{
+        background-color: #eee;
+    }
+    </style>
+
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-inverse">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="{{ url_for('index') }}">AptDeco App</a>
+                <a class="navbar-brand" href="#">About</a>
+                <a class="navbar-brand" href="#">Slides</a>
+            </div>
+        </div>
+    </nav>
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    {% for message in messages %}
+        <div class ="alert alert-warning alert-dismissible" role="alert">
+            {{ message }}
+        </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+{% block content %}
+
+{% endblock %}
+
+</body>
+
+</html>

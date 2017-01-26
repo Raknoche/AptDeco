@@ -1,0 +1,73 @@
+{% extends "header.html" %}
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/dropzone/4.0.1/min/dropzone.min.js"></script>
+<script src="/static/js/custom.js"></script>
+<script src="/static/js/circle-progress.js"></script>
+
+{% block content %}
+
+
+<div class="col-lg-offset-2 col-lg-8">
+    <center>
+    <h4>Upload an image:</h4>
+    <form method=post action="{{ url_for('get_images') }}" enctype=multipart/form-data>
+         <input type=file name=image>
+         <input type=submit value=Upload>
+    </form>
+    </center>
+</div>
+
+<!-- Display Best Images -->
+
+{% if best_image_flag  %}
+<div class="row">
+    <center>
+        <h1> Best Image: </h1>
+        <div class="col-sm-offset-2 col-sm-8">
+
+            <div class="jumbotron">
+
+                {% for best_image, best_image_prob in best_image %}
+                    <div class="row">
+                        <div class="col-sm-offset-2 col-sm-8">
+                            <img  src="static/userImages/{{best_image}}" class="img-responsive" style="padding-top: 5px">
+                            <p>{{best_image_prob}}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </center>
+</div>
+
+{% endif %}
+
+
+<!-- Display User Images -->
+{% if best_image_flag  %}
+<div class="row">
+    <center>
+        <h1> All Images: </h1>
+        <div class="col-sm-offset-2 col-sm-8">
+
+            <div class="jumbotron">
+                {% for image, prob in user_images %}
+                    <div class="row">
+                        <div class="col-sm-offset-2 col-sm-8">
+
+                            <img  src="static/userImages/{{image}}" class="img-responsive" style="padding-top: 5px">
+                            <p>{{prob}}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+        </div>
+    </center>
+</div>
+
+{% endif %}
+
+
+{% endblock %}
