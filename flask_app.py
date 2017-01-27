@@ -22,7 +22,10 @@ with open('image_classifier.pkl', 'rb') as f:
     clf = pickle.load(f)
 with open('image_classifier_features.pkl', 'rb') as f:
     image_classifier_features = pickle.load(f)
-
+with open('classifier_mu_std.pkl', 'rb') as f:
+    classifier_mu_std = pickle.load(f)
+    mu = classifier_mu_std[0]
+    std = classifier_mu_std[1]
 
 #Handles getting skills from user PDF
 def allowed_file(filename):
@@ -37,6 +40,9 @@ def index():
     best_image_flag = 0
     best_image = []
     best_image_prob = []
+    print("IMAGES:")
+    print(user_images)
+
     if user_images:
         max_prob_idx = image_probs.index(max(image_probs))
         best_image = [user_images[max_prob_idx]]
@@ -45,12 +51,11 @@ def index():
 
     return render_template("index.html", user_images=zip(user_images,image_probs),best_image_flag = best_image_flag, best_image=zip(best_image,best_image_prob))
 
-#Handles displaying user photos
-#Handles getting skills from user PDF
 @app.route('/get_images', methods=['POST'])
 def get_images():
     # check if the post request has the file part
-    file = request.files['image']
+    file = request.files['file']
+    
     if file and allowed_file(file.filename):
 
         #Save the Image
@@ -68,11 +73,32 @@ def get_images():
         front_page_prob = clf.predict_proba(feats[image_classifier_features])[0][1]
         image_probs.append(front_page_prob)
 
-        #Reload homepage
-        return redirect(url_for('index'))
-
-    #flash('Please upload a PDF file')
+    #Reload homepage
     return redirect(url_for('index'))
+
+@app.route('/rank_images', methods=['GET','POST'])
+def rank_images():
+    if user_images:
+        sorted_probs = sorted(image_probs,reverse=True)
+        sorted_images = [img for (prob,img) in sorted(zip(image_probs,user_images),reverse=True)]
+
+        sorted_stars = []
+        for prob in sorted_probs:
+            stars = (prob-mu)/(std/1.5)+3
+            if stars <0:
+                stars = 0
+            if stars >5:
+                stars = 5
+            sorted_stars.append(stars)
+
+        #max_prob_idx = image_probs.index(max(image_probs))
+        #best_image = [user_images[max_prob_idx]]
+        #best_image_prob = [image_probs[max_prob_idx]]
+        best_image_flag = 1
+
+    #Reload homepage
+    return render_template("index.html", user_images=zip(sorted_images,sorted_stars),best_image_flag = best_image_flag)
+
 
 
 if __name__ == "__main__":
