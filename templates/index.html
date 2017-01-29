@@ -4,43 +4,124 @@
 
 {% block content %}
 
-<center><h1>Drop Your Images Here</h1></center>
-
-{% include 'dropzone.html' %}
-
-<center>
-<form action="{{url_for('rank_images')}}" method="get">
-    <br>
-        <button type="submit" class="btn btn-primary btn-lg" role="button">Submit Images</button>
-    <br>
-</form>
-</center>
 
 
 <!-- Display User Images -->
 {% if best_image_flag  %}
-<div class="row">
-    <center>
-        <h1> Image Rankings: </h1>
-        <div class="col-sm-offset-2 col-sm-8">
 
-            <div class="jumbotron">
-                {% for image, stars in user_images %}
-                    <div class="row">
-                        <div class="col-sm-offset-2 col-sm-8">
+<!-- Complicated slider 
+<div class="container content"> 
+    <div id="carousel-example-generic" class="carousel slide" data-ride="carousel" data-interval="false"> 
+        <ol class="carousel-indicators"> 
+            {% for image, stars in user_images %}
+              <li data-target="#carousel-example-generic" data-slide-to="{{loop.index-1}}" {% if loop.index==1 %}class="active" {%endif%}></li>
+            {% endfor %}
+        </ol> 
 
-                            <img  src="static/userImages/{{image}}" class="img-responsive" style="padding-top: 5px">
-                            <p>{{'%0.1f'| format(stars|float)}}</p>
+        <div class="carousel-inner">
+
+        {% for image, stars in user_images %}
+          {% if loop.index == 1 %}
+            <div class="item active">
+          {% else %}
+            <div class="item">
+          {% endif %}
+                    <div class="col-xs-12">
+                        <div class="thumbnail adjust1 style='margins:0;'">
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <center>
+                                <p class="text-info lead adjust1">We give this {{'%0.1f'| format(stars|float)}} stars.</p>
+                                <img class="media-object img-rounded img-responsive" src="static/userImages/{{image}}">
+                                </center>
+                            </div>
+                            <div class="col-md-5 col-sm-5 col-xs-12">
+                                <div class="caption">
+                                    <blockquote class="adjust1">
+                                        <p>Things we like about this picture:</p>
+                                        <small><cite title="Source Title">feature1</cite></small> 
+                                        <p>Things we don't like about this picture:</p>
+                                        <small><cite title="Source Title">feature1</cite></small> 
+                                    </blockquote>
+                                </div>
+                                </br>
+                            </div>
                         </div>
                     </div>
-                {% endfor %}
             </div>
+        {% endfor %}
+ 
 
+        <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev"> <span class="glyphicon glyphicon-chevron-left"></span> </a> 
+        <a class="right carousel-control" href="#carousel-example-generic" data-slide="next"> <span class="glyphicon glyphicon-chevron-right"></span> </a>
+    </div>
+
+</div>
+-->
+
+<div class="bs-example">
+  <center>
+    <div id="myCarousel" class="carousel slide container" data-ride="carousel" data-interval="false" style="width: 500px;">
+        <!-- Carousel indicators -->
+        <ol class="carousel-indicators">
+            {% for image, stars in user_images %}
+              <li data-target="#myCarousel" data-slide-to="{{loop.index-1}}" {% if loop.index==1 %}class="active" {%endif%}></li>
+            {% endfor %}
+        </ol>   
+        <!-- Wrapper for carousel items -->
+        <div class="carousel-inner" >
+            {% for image, stars in user_images %}
+            <div class="item {% if loop.index==1 %}active{%endif%}">
+                <img src="static/userImages/{{image}}" style="height: 300px; width: 300px;">
+                
+                <div class="star-ratings-css">
+                  {%set perc = 100*(stars|float)/5 %}
+                  <div class="star-ratings-css-top" style="width: {{perc}}%">
+                  <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+                  <div class="star-ratings-css-bottom">
+                  <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+                </div>
+            </div>
+            {%endfor%}
         </div>
+        <!-- Carousel controls -->
+        <a class="carousel-control left" href="#myCarousel" data-slide="prev">
+            <span class="glyphicon glyphicon-chevron-left"></span>
+        </a>
+        <a class="carousel-control right" href="#myCarousel" data-slide="next">
+            <span class="glyphicon glyphicon-chevron-right"></span>
+        </a>
+    </div>
     </center>
 </div>
 
+
+
 {% endif %}
+
+
+
+<center><h1>Drop Your Images Here</h1></center>
+
+{% include 'dropzone.html' %}
+
+
+
+<div class="container" id="container">
+<center>
+<div class="col-md-offset-1 col-md-10"> 
+<form action="{{url_for('rank_images')}}" method="get">
+        <button type="submit" class="btn btn-primary btn-lg" role="button">Submit Additional Images</button>
+</form>
+
+<form action="{{url_for('rank_images')}}" method="get">
+        <button type="submit" class="btn btn-danger btn-lg" role="button">Clear Images</button>
+</form>
+</div>
+</center>
+</div>
+
+
+
 
 
 {% endblock %}

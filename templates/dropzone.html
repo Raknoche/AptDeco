@@ -2,13 +2,14 @@
 
     <br>
 
-    <blockquote>
+    <div class="col-md-offset-1 col-md-10">
+    <div class="jumbotron">
         <p>
-            This is a bootstrap theme of Dropzone.js with a completely different user experience.<br />
-            It is a demonstration of the powerful configuration possibilities of <a href="http://www.dropzonejs.com">Dropzone.js</a>.
-            You can make Dropzone.js look exactly how you want it to look and it's very easy to do so.
+            Drop your images here and click "upload" to process them.<br />
+            Alternatively, click "Add files" to select images.<br />
         </p>
-    </blockquote>
+    </div>
+    </div>
 
     <br>
     <div id="actions" class="row">
@@ -132,23 +133,6 @@
           myDropzone.removeAllFiles(true);
         };
 
-        Dropzone.options.myDropzone = {
-
-          autoProcessQueue: false,
-
-        init: function() {
-            var submitButton = document.querySelector("#upload-button");
-            myDropzone = this;
-
-            submitButton.addEventListener("click", function() {
-                myDropzone.processQueue();
-            });
-
-            this.on("sending", function() {
-                $("#myDropzone").submit()
-            });
-          }
-        };
                 
     </script>  <!-- js for the add files area /-->
 

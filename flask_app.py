@@ -13,8 +13,12 @@ app.secret_key = 'super secret key'
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 APP_USER_IMAGES = os.path.join(APP_ROOT, 'static/userImages')
 ALLOWED_EXTENSIONS = ["jpg", "png", "gif", "jpeg"]
+
 user_images = []
 image_probs = []
+sorted_images=[]
+sorted_stars=[]
+sorted_probs=[]
 
 
 #Load the classifier
@@ -36,29 +40,10 @@ def allowed_file(filename):
 #Home page
 @app.route("/", methods=["GET", "POST"])
 def index():
-
-    best_image_flag = 0
-    best_image = []
-    best_image_prob = []
-    print("IMAGES:")
-    print(user_images)
-
-    if user_images:
-        max_prob_idx = image_probs.index(max(image_probs))
-        best_image = [user_images[max_prob_idx]]
-        best_image_prob = [image_probs[max_prob_idx]]
-        best_image_flag = 1
-
-    return render_template("index.html", user_images=zip(user_images,image_probs),best_image_flag = best_image_flag, best_image=zip(best_image,best_image_prob))
+    return render_template("index.html", user_images=list(zip(sorted_images,sorted_stars)),best_image_flag = int(len(sorted_images)>0))
 
 @app.route('/get_images', methods=['POST'])
 def get_images():
-    global sorted_images
-    global sorted_stars
-    global best_image_flag
-    # check if the post request has the file part
-    #file = request.files['file']
-
     file = request.files['file']
     if file and allowed_file(file.filename):
 
@@ -77,15 +62,16 @@ def get_images():
         front_page_prob = clf.predict_proba(feats[image_classifier_features])[0][1]
         image_probs.append(front_page_prob)
 
-    print('USER_IMAGES')
-    print(user_images)
-    #Reload homepage
-    #return redirect(url_for('index'))
-    #if user_images:
-    sorted_probs = sorted(image_probs,reverse=True)
-    sorted_images = [img for (prob,img) in sorted(zip(image_probs,user_images),reverse=True)]
+    #Return nothing
+    return ('',204)
 
-    sorted_stars = []
+
+@app.route('/rank_images', methods=['GET','POST'])
+def rank_images():
+    for (prob,img) in sorted(zip(image_probs,user_images),reverse=True):
+        sorted_images.append(img)
+        sorted_probs.append(prob)
+
     for prob in sorted_probs:
         stars = (prob-mu)/(std)+3
         if stars <0:
@@ -94,19 +80,8 @@ def get_images():
             stars = 5
         sorted_stars.append(stars)
 
-    best_image_flag = 1
-    print('RENDERING')
-
     #Reload homepage
-    return render_template("index.html", user_images=zip(sorted_images,sorted_stars),best_image_flag = best_image_flag)
-    #return redirect(url_for('index'))
-
-@app.route('/rank_images', methods=['GET','POST'])
-def rank_images():
-    #Reload homepage
-    return render_template("ranked_images.html", user_images=zip(sorted_images,sorted_stars),best_image_flag = best_image_flag)
-
-
+    return redirect(url_for("index"))
 
 if __name__ == "__main__":
     app.run()

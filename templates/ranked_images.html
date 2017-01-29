@@ -4,16 +4,15 @@
 
 {% block content %}
 
-
+<!-- Carousel with stats window 
 <div class="container content"> 
     <div id="carousel-example-generic" class="carousel slide" data-ride="carousel"> 
-        <!-- Indicators -->
         <ol class="carousel-indicators"> 
             <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
             <li data-target="#carousel-example-generic" data-slide-to="1"></li>
             <li data-target="#carousel-example-generic" data-slide-to="2"></li>
         </ol> 
-        <!-- Wrapper for slides -->
+
         <div class="carousel-inner">
             <div class="item active">
                 <div class="row">
@@ -82,14 +81,72 @@
                 </div>
             </div>
         </div> 
-        <!-- Controls --> 
+
         <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev"> <span class="glyphicon glyphicon-chevron-left"></span> </a> 
         <a class="right carousel-control" href="#carousel-example-generic" data-slide="next"> <span class="glyphicon glyphicon-chevron-right"></span> </a>
     </div>
 </div>
+-->
 
 <!-- Display User Images -->
+
+
+
+
 {% if best_image_flag  %}
+
+
+
+<div class="container content"> 
+    <div id="carousel-example-generic" class="carousel slide" data-ride="carousel" data-interval="false"> 
+        <ol class="carousel-indicators"> 
+            {% for image, stars in user_images %}
+              <li data-target="#carousel-example-generic" data-slide-to="{{loop.index-1}}" {% if loop.index==1 %}class="active" {%endif%}></li>
+            {% endfor %}
+        </ol> 
+
+        <div class="carousel-inner">
+
+        {% for image, stars in user_images %}
+          {% if loop.index == 1 %}
+            <div class="item active">
+          {% else %}
+            <div class="item">
+          {% endif %}
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="thumbnail adjust1 style='margins:0;'">
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <center>
+                                <p class="text-info lead adjust1">We give this {{'%0.1f'| format(stars|float)}} stars.</p>
+                                <img class="media-object img-rounded img-responsive" src="static/userImages/{{image}}">
+                                </center>
+                            </div>
+                            <div class="col-md-5 col-sm-5 col-xs-12">
+                                <div class="caption">
+                                    <blockquote class="adjust1">
+                                        <p>Things we like about this picture:</p>
+                                        <small><cite title="Source Title">feature1</cite></small> 
+                                        <p>Things we don't like about this picture:</p>
+                                        <small><cite title="Source Title">feature1</cite></small> 
+                                    </blockquote>
+                                </div>
+                                </br>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+ 
+
+        <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev"> <span class="glyphicon glyphicon-chevron-left"></span> </a> 
+        <a class="right carousel-control" href="#carousel-example-generic" data-slide="next"> <span class="glyphicon glyphicon-chevron-right"></span> </a>
+    </div>
+
+</div>
+
+
 <div class="row">
     <center>
         <h1> Image Rankings: </h1>
@@ -110,7 +167,6 @@
         </div>
     </center>
 </div>
-
 
 {% endif %}
 
