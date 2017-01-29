@@ -4,46 +4,9 @@
 
 {% block content %}
 
-<!-- Main Image Drop Window -->
-<div class="container">
-    <div class="panel panel-default">
-        <div class="panel-body">
+<center><h1>Drop Your Images Here</h1></center>
 
-          <!-- Standar Form -->
-                    <!--
-
-          <center>
-          <h4>Select files from your computer</h4>
-          
-          <form action="" method="post" enctype="multipart/form-data" id="js-upload-form">
-            <div class="form-inline">
-              <div class="form-group">
-                <input type="file" name="files[]" id="js-upload-files" multiple>
-              </div>
-              <button type="submit" class="btn btn-sm btn-primary" id="js-upload-submit">Upload files</button>
-            </div>
-          </form>
-          </center>
-          -->
-
-          <!-- Drop Zone -->
-          <center>
-
-            <form id="drop" class="dropzone previews-container" action="/get_images">
-                <div class="dz-message text-center panel-transparent-text">
-                    <br />
-                    <br />
-                    <h4 class="panel-transparent-text">Click or drag to upload images here</h4>
-                    <br />
-                    <br />                   
-                </div>
-            </form>
-
-            </center>
-        </div>
-    </div>
-    </div>
-</div>
+{% include 'dropzone.html' %}
 
 <center>
 <form action="{{url_for('rank_images')}}" method="get">
@@ -53,7 +16,6 @@
 </form>
 </center>
 
-<!-- Display Best Images -->
 
 <!-- Display User Images -->
 {% if best_image_flag  %}

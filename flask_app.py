@@ -53,9 +53,13 @@ def index():
 
 @app.route('/get_images', methods=['POST'])
 def get_images():
+    global sorted_images
+    global sorted_stars
+    global best_image_flag
     # check if the post request has the file part
+    #file = request.files['file']
+
     file = request.files['file']
-    
     if file and allowed_file(file.filename):
 
         #Save the Image
@@ -73,31 +77,34 @@ def get_images():
         front_page_prob = clf.predict_proba(feats[image_classifier_features])[0][1]
         image_probs.append(front_page_prob)
 
+    print('USER_IMAGES')
+    print(user_images)
     #Reload homepage
-    return redirect(url_for('index'))
+    #return redirect(url_for('index'))
+    #if user_images:
+    sorted_probs = sorted(image_probs,reverse=True)
+    sorted_images = [img for (prob,img) in sorted(zip(image_probs,user_images),reverse=True)]
 
-@app.route('/rank_images', methods=['GET','POST'])
-def rank_images():
-    if user_images:
-        sorted_probs = sorted(image_probs,reverse=True)
-        sorted_images = [img for (prob,img) in sorted(zip(image_probs,user_images),reverse=True)]
+    sorted_stars = []
+    for prob in sorted_probs:
+        stars = (prob-mu)/(std)+3
+        if stars <0:
+            stars = 0
+        if stars >5:
+            stars = 5
+        sorted_stars.append(stars)
 
-        sorted_stars = []
-        for prob in sorted_probs:
-            stars = (prob-mu)/(std/1.5)+3
-            if stars <0:
-                stars = 0
-            if stars >5:
-                stars = 5
-            sorted_stars.append(stars)
-
-        #max_prob_idx = image_probs.index(max(image_probs))
-        #best_image = [user_images[max_prob_idx]]
-        #best_image_prob = [image_probs[max_prob_idx]]
-        best_image_flag = 1
+    best_image_flag = 1
+    print('RENDERING')
 
     #Reload homepage
     return render_template("index.html", user_images=zip(sorted_images,sorted_stars),best_image_flag = best_image_flag)
+    #return redirect(url_for('index'))
+
+@app.route('/rank_images', methods=['GET','POST'])
+def rank_images():
+    #Reload homepage
+    return render_template("ranked_images.html", user_images=zip(sorted_images,sorted_stars),best_image_flag = best_image_flag)
 
 
 
