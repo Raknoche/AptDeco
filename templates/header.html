@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>AptDeco App</title>
+    <title>DecoRater</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -18,11 +18,11 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/dropzone.css') }}">
 
     <!-- Dropzone -->
-    <script src="//cdnjs.cloudflare.com/ajax/libs/dropzone/4.0.1/min/dropzone.min.js"></script>
- 
+     <script src="{{ url_for('static', filename='dropzone/dropzone.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='dropzone/dropzone.css') }}">
+
 
 
     <!-- D3 -->
@@ -45,66 +45,10 @@
     }
     </style>
 
-    <style>
-        html, body {
-        height: 100%;
-        }
-        #actions {
-        margin: 2em 0;
-        }
-        /* Mimic table appearance */
-        div.table {
-        display: table;
-        }
-        div.table .file-row {
-        display: table-row;
-        }
-        div.table .file-row > div {
-        display: table-cell;
-        vertical-align: top;
-        border-top: 1px solid #ddd;
-        padding: 8px;
-        }
-        div.table .file-row:nth-child(odd) {
-        background: #f9f9f9;
-        }
-        /* The total progress gets shown by event listeners */
-        #total-progress {
-        opacity: 0;
-        transition: opacity 0.3s linear;
-        }
-        /* Hide the progress bar when finished */
-        #previews .file-row.dz-success .progress {
-        opacity: 0;
-        transition: opacity 0.3s linear;
-        }
-        /* Hide the delete button initially */
-        #previews .file-row .delete {
-        display: none;
-        }
-        /* Hide the start and cancel buttons and show the delete button */
-        #previews .file-row.dz-success .start,
-        #previews .file-row.dz-success .cancel {
-        display: none;
-        }
-        #previews .file-row.dz-success .delete {
-        display: block;
-        }
 
-    </style>
-
-
-    <!-- style for complicated slider
-
-        .carousel-indicators .active{ background: #31708f; } .content{ margin-top:20px; } .adjust1{ float:left; width:100%; margin-bottom:0; } .adjust2{ margin:0; } .carousel-indicators li{ border :1px solid #ccc; } .carousel-control{ color:#31708f; width:5%; } .carousel-control:hover, .carousel-control:focus{ color:#31708f; } .carousel-control.left, .carousel-control.right { background-image: none; } .media-object{ margin:auto; margin-top:15%; } @media screen and (max-width: 768px) { .media-object{ margin-top:0; } }
-    -->
 
     <!-- Style for simple slide -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-    <style type="text/css">
+     <style type="text/css">
         .carousel{
         background: white;
         margin-top: 20px;
@@ -119,37 +63,37 @@
         .carousel-indicators .active{ background: #31708f; } .content{ margin-top:20px; } .adjust1{ float:left; width:100%; margin-bottom:0; } .adjust2{ margin:0; } .carousel-indicators li{ border :1px solid #ccc; } .carousel-control{ color:#31708f; width:5%; } .carousel-control:hover, .carousel-control:focus{ color:#31708f; } .carousel-control.left, .carousel-control.right { background-image: none; } .media-object{ margin:auto; margin-top:15%; } @media screen and (max-width: 768px) { .media-object{ margin-top:0; } }
     </style>
 
+    <!-- Style for star ratings -->
     <style>
     .star-ratings-css {
-  unicode-bidi: bidi-override;
-  color: #c5c5c5;
-  font-size: 25px;
-  height: 25px;
-  width: 100px;
-  margin: 0 auto;
-  position: relative;
-  padding: 0;
-  text-shadow: 0px 1px 0 #a2a2a2;
-  margin-bottom: 80px;
-  }
-  .star-ratings-css-top {
-    color: #e7711b;
-    padding: 0;
-    position: absolute;
-    z-index: 1;
-    display: block;
-    top: 0;
-    left: 0;
-    overflow: hidden;
+      unicode-bidi: bidi-override;
+      color: #c5c5c5;
+      font-size: 25px;
+      height: 25px;
+      width: 100px;
+      margin: 0 auto;
+      position: relative;
+      padding: 0;
+      text-shadow: 0px 1px 0 #a2a2a2;
+      margin-bottom: 80px;
+      }
+      .star-ratings-css-top {
+        color: #e7711b;
+        padding: 0;
+        position: absolute;
+        z-index: 1;
+        display: block;
+        top: 0;
+        left: 0;
+        overflow: hidden;
 
-  }
-  .star-ratings-css-bottom {
-    padding: 0;
-    display: block;
-    z-index: 0;
+      }
+      .star-ratings-css-bottom {
+        padding: 0;
+        display: block;
+        z-index: 0;
 
-  }
-}
+      }
 
     </style>
 
@@ -160,7 +104,7 @@
     <nav class="navbar navbar-inverse">
         <div class="container">
             <div class="navbar-header">
-                <a class="navbar-brand" href="{{ url_for('index') }}">AptDeco App</a>
+                <a class="navbar-brand" href="{{ url_for('index') }}">DecoRater</a>
                 <a class="navbar-brand" href="#">About</a>
                 <a class="navbar-brand" href="#">Slides</a>
             </div>

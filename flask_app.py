@@ -40,6 +40,11 @@ def allowed_file(filename):
 #Home page
 @app.route("/", methods=["GET", "POST"])
 def index():
+    del user_images[:]
+    del image_probs[:]
+    del sorted_images[:]
+    del sorted_stars[:]
+    del sorted_probs[:]
     return render_template("index.html", user_images=list(zip(sorted_images,sorted_stars)),best_image_flag = int(len(sorted_images)>0))
 
 @app.route('/get_images', methods=['POST'])
@@ -65,23 +70,25 @@ def get_images():
     #Return nothing
     return ('',204)
 
-
 @app.route('/rank_images', methods=['GET','POST'])
 def rank_images():
-    for (prob,img) in sorted(zip(image_probs,user_images),reverse=True):
-        sorted_images.append(img)
-        sorted_probs.append(prob)
 
-    for prob in sorted_probs:
-        stars = (prob-mu)/(std)+3
-        if stars <0:
-            stars = 0
-        if stars >5:
-            stars = 5
-        sorted_stars.append(stars)
+
+    for (prob,img) in sorted(zip(image_probs,user_images),reverse=True):
+        if img not in sorted_images:
+            sorted_images.append(img)
+            sorted_probs.append(prob)
+
+            stars = (prob-mu)/(std)+3
+            if stars <0:
+                stars = 0
+            if stars >5:
+                stars = 5
+            sorted_stars.append(stars)
+
 
     #Reload homepage
-    return redirect(url_for("index"))
+    return render_template("ranked_images.html", user_images=list(zip(sorted_images,sorted_stars)),best_image_flag = int(len(sorted_images)>0))
 
 if __name__ == "__main__":
     app.run()
