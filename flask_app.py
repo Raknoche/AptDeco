@@ -26,10 +26,7 @@ with open('image_classifier.pkl', 'rb') as f:
     clf = pickle.load(f)
 with open('image_classifier_features.pkl', 'rb') as f:
     image_classifier_features = pickle.load(f)
-with open('classifier_mu_std.pkl', 'rb') as f:
-    classifier_mu_std = pickle.load(f)
-    mu = classifier_mu_std[0]
-    std = classifier_mu_std[1]
+
 
 #Handles getting skills from user PDF
 def allowed_file(filename):
@@ -46,6 +43,15 @@ def index():
     del sorted_stars[:]
     del sorted_probs[:]
     return render_template("index.html", user_images=list(zip(sorted_images,sorted_stars)),best_image_flag = int(len(sorted_images)>0))
+
+@app.route("/about", methods=["GET"])
+def about():
+    return render_template("about.html")
+
+@app.route("/slides")
+def slides():
+    ''' Show slides '''
+    return render_template("slides.html")
 
 @app.route('/get_images', methods=['POST'])
 def get_images():
@@ -79,11 +85,7 @@ def rank_images():
             sorted_images.append(img)
             sorted_probs.append(prob)
 
-            stars = (prob-mu)/(std)+3
-            if stars <0:
-                stars = 0
-            if stars >5:
-                stars = 5
+            stars = prob*5
             sorted_stars.append(stars)
 
 

@@ -1,0 +1,34 @@
+{% extends "header.html" %}
+
+
+
+{% block content %}
+
+
+<div class="container">
+
+<h1>About the Project:</h1>
+
+<p>
+    My name is Richard Knoche, and I created DecoRater over three weeks while working at Insight Data Science.  DecoRater was created for the peer-to-peer furniture resale website, AptDeco.com.  The editors at AptDeco spend an inordinate amount of time sifting through user uploaded images to determine which ones should be displayed on the front page of each listing.  DecoRater automatically quantifies the quality of each image, allowing editors to improve their efficiency by 35%.
+</p>
+<p>
+    I was initially drawn to this project by the abstract nature of the problem.  While there are some aspects of images which are easily quantified, the overall quality of an image is inherently subjective.  I worked closely with the AptDeco team to understand what a “high quality” image meant to their editing team, and engineered over 60 features to treat these subjective opinions in a quantitative way.
+</p>
+
+<h1>How It Works:</h1>
+
+<p>
+    DecoRater was built using AptDeco’s MySQL database of half a million images.  The quality of an image is determined by a AdaBoost Random Forest classification model which outputs the probability that the editors will use an image for the front page of a listing.  The classifier uses quantified information about each image’s dimensions, sharpness, colorfulness, focal points, and symmetry to compute this probability.  For a more detailed discussion about these features, please see my <a href="#">blog post</a>.
+</p>
+<p>
+    Behind the scenes, DecoRater is coded in Python, and makes use of the OpenCV, Pandas, NumPy, and Scikit-Learn libraries.  This website is hosted on AWS, and implemented with Flask, Bootstrap, JavaScript, and JQuery.
+
+    The source code is available on <a href="https://github.com/Raknoche/AptDeco">Github</a>.
+</p>
+
+
+
+</div>
+
+{% endblock %}

@@ -18,14 +18,24 @@
         <div class="carousel-inner" >
             {% for image, stars in user_images %}
             <div class="item {% if loop.index==1 %}active{%endif%}">
-                <img src="static/userImages/{{image}}" style="height: 300px; width: 300px;">
-                
+                <img src="static/userImages/{{image}}" style="height: 400px; width: 400px;">
+
+                {% if stars > 2.5 %}
+                  <span> This image is suitable for editing <span class="glyphicon glyphicon-thumbs-up
+" aria-hidden="true"></span> </span>
+                {% else %}
+                  <span> This image is not suitable for editing <span class="glyphicon glyphicon-thumbs-down
+" aria-hidden="true"></span> </span>
+                {% endif %}      
+
                 <div class="star-ratings-css">
                   {%set perc = 125*(stars|float)/5 %}
                   <div class="star-ratings-css-top" style="width: {{perc}}%">
                   <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
                   <div class="star-ratings-css-bottom">
                   <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+
+
                 </div>
             </div>
             {%endfor%}
