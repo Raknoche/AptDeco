@@ -1,0 +1,25 @@
+{% extends "header.html" %}
+
+
+
+{% block content %}
+
+
+
+<center><h1>Drop Your Images Here</h1></center>
+<form action="/get_images"
+      class="dropzone"
+      id="my-awesome-dropzone"></form>
+
+
+<div class="container" id="container">
+<center>
+<div class="col-md-offset-1 col-md-10"> 
+<form action="{{url_for('rank_images')}}" method="get">
+        <button type="submit" class="btn btn-primary btn-lg" role="button">Submit Images</button>
+</form>
+
+
+
+
+{% endblock %}
