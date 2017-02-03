@@ -2,7 +2,7 @@ import sys
 sys.path.append('/home/ubuntu/anaconda3/envs/DecoRaterEnv/bin/python')
 
 from DecoRater import app
-from flask import Flask, flash, redirect, render_template, request, url_for, jsonify, session
+from flask import Flask, flash, redirect, render_template, request, url_for, jsonify
 import os
 from random import randint
 from werkzeug.utils import secure_filename
@@ -11,6 +11,7 @@ import pickle
 import cv2
 import pandas as pd
 
+app.secret_key = 'some_secret'
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 APP_USER_IMAGES = os.path.join(APP_ROOT, 'static/userImages')
 ALLOWED_EXTENSIONS = ["jpg", "png", "gif", "jpeg"]
@@ -77,21 +78,25 @@ def get_images():
     #Return nothing
     return ('',204)
 
+
 @app.route('/rank_images', methods=['GET','POST'])
 def rank_images():
+    if user_images:
+        for (prob,img) in sorted(zip(image_probs,user_images),reverse=True):
+            if img not in sorted_images:
+                sorted_images.append(img)
+                sorted_probs.append(prob)
+
+                stars = prob*5
+                sorted_stars.append(stars)
 
 
-    for (prob,img) in sorted(zip(image_probs,user_images),reverse=True):
-        if img not in sorted_images:
-            sorted_images.append(img)
-            sorted_probs.append(prob)
+        #Reload homepage
+        return render_template("ranked_images.html", user_images=list(zip(sorted_images,sorted_stars)),best_image_flag = int(len(sorted_images)>0))
+    else:
+        flash('Please upload at least one jpg, png, or gif file before submitting.')
+        return redirect(url_for('index'))
 
-            stars = prob*5
-            sorted_stars.append(stars)
-
-
-    #Reload homepage
-    return render_template("ranked_images.html", user_images=list(zip(sorted_images,sorted_stars)),best_image_flag = int(len(sorted_images)>0))
 
 if __name__ == "__main__":
     app.run()
