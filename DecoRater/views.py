@@ -1,3 +1,6 @@
+import sys
+sys.path.append('/home/ubuntu/anaconda3/envs/DecoRaterEnv/bin/python')
+
 from DecoRater import app
 from flask import Flask, flash, redirect, render_template, request, url_for, jsonify, session
 import os
