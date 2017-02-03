@@ -5,53 +5,26 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-
-
     <!-- JQuery and JS -->
     <link href="//code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" rel="Stylesheet"></link>
     <script src="//code.jquery.com/jquery-2.2.0.min.js"></script>
     <script src="//code.jquery.com/ui/1.10.2/jquery-ui.js" ></script>
 
     <!-- Then include bootstrap js -->
-    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
- 
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
     <!-- Dropzone -->
     <script src="{{ url_for('static', filename='dropzone/dropzone.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='dropzone/dropzone.css') }}">
-
-   <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
-
-
-
-    <!-- D3 -->
-    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-    <style>
-    #xaxis .domain {
-        fill:none;
-        stroke:#000;
-    }
-    #xaxis text, #yaxis text {
-        font-size: 12px;
-    }
-    </style>
     
-
-    <!-- Use for editing default Bootstap -->
+    <!-- Carousel Styling -->
     <style>
-    .jumbotron{
-        background-color: #eee;
-    }
-    </style>
-
-
-
-    <!-- Style for simple slide -->
-     <style type="text/css">
         .carousel{
-        background: white;
-        margin-top: 20px;
+          background: white;
+          margin-top: 20px;
         }
         .carousel .item img{
             margin: 0 auto; /* Align slide image horizontally center */
@@ -61,42 +34,37 @@
         }
 
         .carousel-indicators .active{ background: #31708f; } .content{ margin-top:20px; } .adjust1{ float:left; width:100%; margin-bottom:0; } .adjust2{ margin:0; } .carousel-indicators li{ border :1px solid #ccc; } .carousel-control{ color:#31708f; width:5%; } .carousel-control:hover, .carousel-control:focus{ color:#31708f; } .carousel-control.left, .carousel-control.right { background-image: none; } .media-object{ margin:auto; margin-top:15%; } @media screen and (max-width: 768px) { .media-object{ margin-top:0; } }
+
+        .star-ratings-css {
+        unicode-bidi: bidi-override;
+          color: #c5c5c5;
+          font-size: 25px;
+          height: 25px;
+          width: 100px;
+          margin: 0 auto;
+          position: relative;
+          padding: 0;
+          text-shadow: 0px 1px 0 #a2a2a2;
+          margin-bottom: 80px;
+        }
+        .star-ratings-css-top {
+          color: #e7711b;
+          padding: 0;
+          position: absolute;
+          z-index: 1;
+          display: block;
+          top: 0;
+          left: 0;
+          overflow: hidden;
+
+        }
+        .star-ratings-css-bottom {
+          padding: 0;
+          display: block;
+          z-index: 0;
+
+        }
     </style>
-
-    <!-- Style for star ratings -->
-    <style>
-    .star-ratings-css {
-      unicode-bidi: bidi-override;
-      color: #c5c5c5;
-      font-size: 25px;
-      height: 25px;
-      width: 100px;
-      margin: 0 auto;
-      position: relative;
-      padding: 0;
-      text-shadow: 0px 1px 0 #a2a2a2;
-      margin-bottom: 80px;
-      }
-      .star-ratings-css-top {
-        color: #e7711b;
-        padding: 0;
-        position: absolute;
-        z-index: 1;
-        display: block;
-        top: 0;
-        left: 0;
-        overflow: hidden;
-
-      }
-      .star-ratings-css-bottom {
-        padding: 0;
-        display: block;
-        z-index: 0;
-
-      }
-
-    </style>
-
 </head>
 
 <body>
@@ -111,19 +79,22 @@
         </div>
     </nav>
 
-{% with messages = get_flashed_messages() %}
-  {% if messages %}
-    {% for message in messages %}
-        <div class ="alert alert-warning alert-dismissible" role="alert">
-            {{ message }}
-        </div>
-    {% endfor %}
-  {% endif %}
-{% endwith %}
+    <!-- Flash error messages -->
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+            <div class ="alert alert-warning alert-dismissible" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
 
-{% block content %}
 
-{% endblock %}
+    <!-- Individual page content -->
+    {% block content %}
+
+    {% endblock %}
 
 </body>
 

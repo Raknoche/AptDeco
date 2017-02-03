@@ -4,25 +4,31 @@
 
 {% block content %}
 
+<!-- Summary of the App -->
 <div class="container">
-        <center>
+    <center>
         <p>Welcome to DecoRater.  This app is designed to automatically assess the quality of furniture images.</p>
         <p>Click or drag a jpg, png, or gif below to upload your images. After the files upload, click "Submit" to see the results!</p>
-        </center>
+    </center>
 </div>
 
+<!-- File Dropzone -->
 <center><h1>Drop Your Images Here</h1></center>
 <form action="/get_images"
       class="dropzone"
       id="my-awesome-dropzone"></form>
 
 
+<!--Submit Button -->
 <div class="container" id="container">
-<center>
-<div class="col-md-offset-1 col-md-10"> 
-<form action="{{url_for('rank_images')}}" method="get">
-        <button type="submit" class="btn btn-primary btn-lg" role="button">Submit Images</button>
-</form>
+    <center>
+        <div class="col-md-offset-1 col-md-10"> 
+            <form action="{{url_for('rank_images')}}" method="get">
+                <button type="submit" class="btn btn-primary btn-lg" role="button">Submit Images</button>
+            </form>
+        </div>
+    </center>
+</div>
 
 
 
