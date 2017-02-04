@@ -1,5 +1,5 @@
 from DecoRater import app
-from flask import Flask, flash, redirect, render_template, request, url_for, jsonify
+from flask import Flask, flash, redirect, render_template, request, url_for, jsonify, session
 import os
 from random import randint
 from werkzeug.utils import secure_filename
@@ -7,18 +7,22 @@ from ImageFeatures import *
 import pickle
 import cv2
 import pandas as pd
-
+import uuid
+import pymysql as mdb
 
 #Set up application parameters
 app.secret_key = 'some_secret'
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 APP_USER_IMAGES = os.path.join(APP_ROOT, 'static/userImages')
+APP_SQL_INFO = os.path.join(APP_ROOT, 'static/sql_info')
+
 ALLOWED_EXTENSIONS = ["jpg", "png", "gif", "jpeg"]
 
-#Global lists -- need to change this to SQL database
-user_images = []
-image_probs = []
-
+#Get SQL DB info
+with open(APP_SQL_INFO) as f:
+    sql_content = f.readlines()
+for var in sql_content:
+    exec(var)
 
 #Load the classifier
 with open('image_classifier.pkl', 'rb') as f:
@@ -35,10 +39,15 @@ def allowed_file(filename):
 #Home page
 @app.route("/", methods=["GET", "POST"])
 def index():
+    if(not 'uid' in session):
+        session['uid'] = uuid.uuid4()
 
-    #Clear all user lists on page refresh
-    del user_images[:]
-    del image_probs[:]
+    #Clear all images for this session
+    con = mdb.connect(sql_address, sql_user, sql_password, sql_database, charset='utf8');
+    with con:
+        cur = con.cursor()
+        query = "DELETE FROM Sessions WHERE user_id = %s"
+        cur.execute(query,(str(session['uid'])))
 
     return render_template("index.html")
 
@@ -69,11 +78,14 @@ def get_images():
         image=cv2.imread(file_save_path)
         feats = ExtractFeatures(image)
         feats = pd.DataFrame(feats,index=[0])
-        front_page_prob = clf.predict_proba(feats[image_classifier_features])[0][1]
+        front_page_prob = clf.predict_proba(feats[image_classifier_features])[0][1]        
 
-        #Append global lists
-        user_images.append(filename)
-        image_probs.append(front_page_prob)
+        #Inserting into Session DB
+        con = mdb.connect(sql_address, sql_user, sql_password, sql_database, charset='utf8');
+        with con:
+            cur = con.cursor()
+            query = "INSERT INTO Sessions (user_id,user_images,image_probs) VALUES (%s,%s,%s)"
+            cur.execute(query,(str(session['uid']),filename,float(front_page_prob)))
 
     #Return nothing
     return ('',204)
@@ -82,6 +94,17 @@ def get_images():
 #Ranked images page
 @app.route('/rank_images', methods=['GET','POST'])
 def rank_images():
+
+    #Retrieving the user's images
+    con = mdb.connect(sql_address, sql_user, sql_password, sql_database, charset='utf8');
+    with con:
+        cur = con.cursor()
+        query = "SELECT user_images,image_probs FROM Sessions WHERE user_id = %s"
+        cur.execute(query,(str(session['uid'])))
+        res = cur.fetchall()
+
+    user_images = [img for (img,prob) in res]
+    image_probs = [np.float(prob) for (img,prob) in res]
 
     #Created sorted lists of the user's images
     sorted_images=[]

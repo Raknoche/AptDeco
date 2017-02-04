@@ -1,0 +1,4 @@
+sql_address = 'localhost'
+sql_user = 'raknoche'
+sql_password = 'localpswd'
+sql_database = 'DecoRaterUsers'
