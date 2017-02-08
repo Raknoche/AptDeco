@@ -16,8 +16,6 @@ APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 APP_USER_IMAGES = os.path.join(APP_ROOT, 'static/userImages')
 APP_SQL_INFO = os.path.join(APP_ROOT, 'static/sql_info')
 
-ALLOWED_EXTENSIONS = ["jpg", "png", "gif", "jpeg"]
-
 #Get SQL DB info
 with open(APP_SQL_INFO) as f:
     sql_content = f.readlines()
@@ -29,12 +27,6 @@ with open('image_classifier.pkl', 'rb') as f:
     clf = pickle.load(f)
 with open('image_classifier_features.pkl', 'rb') as f:
     image_classifier_features = pickle.load(f)
-
-
-#Refuses file extentions that aren't in ALLOWED _EXTENSIONS
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 #Home page
 @app.route("/", methods=["GET", "POST"])
@@ -65,27 +57,27 @@ def slides():
 #Handles dropzone uploads
 @app.route('/get_images', methods=['POST'])
 def get_images():
+    #Dropbox JS will handle extension restrictions
     file = request.files['file']
-    if file and allowed_file(file.filename):
 
-        #Save the Image
-        filename = file.filename.rsplit('.', 1)[0].lower() + str(randint(0,100000)) + '.png'
-        filename = secure_filename(filename)
-        file_save_path = os.path.join(APP_USER_IMAGES, filename)
-        file.save(file_save_path)
+    #Save the Image
+    filename = file.filename.rsplit('.', 1)[0].lower() + str(randint(0,100000)) + '.png'
+    filename = secure_filename(filename)
+    file_save_path = os.path.join(APP_USER_IMAGES, filename)
+    file.save(file_save_path)
 
-        #Rate the image using our model
-        image=cv2.imread(file_save_path)
-        feats = ExtractFeatures(image)
-        feats = pd.DataFrame(feats,index=[0])
-        front_page_prob = clf.predict_proba(feats[image_classifier_features])[0][1]        
+    #Rate the image using our model
+    image=cv2.imread(file_save_path)
+    feats = ExtractFeatures(image)
+    feats = pd.DataFrame(feats,index=[0])
+    front_page_prob = clf.predict_proba(feats[image_classifier_features])[0][1]        
 
-        #Inserting into Session DB
-        con = mdb.connect(sql_address, sql_user, sql_password, sql_database, charset='utf8');
-        with con:
-            cur = con.cursor()
-            query = "INSERT INTO Sessions (user_id,user_images,image_probs) VALUES (%s,%s,%s)"
-            cur.execute(query,(str(session['uid']),filename,float(front_page_prob)))
+    #Inserting into Session DB
+    con = mdb.connect(sql_address, sql_user, sql_password, sql_database, charset='utf8');
+    with con:
+        cur = con.cursor()
+        query = "INSERT INTO Sessions (user_id,user_images,image_probs) VALUES (%s,%s,%s)"
+        cur.execute(query,(str(session['uid']),filename,float(front_page_prob)))
 
     #Return nothing
     return ('',204)
