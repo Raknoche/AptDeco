@@ -7,6 +7,8 @@ import itertools
 import urllib
 from skimage.filters.rank import entropy
 from skimage.morphology import disk
+import pickle
+import pandas as pd
 
 def ResizeImage(image):
     '''Resizes an image to 800x800 pixels. 
@@ -700,3 +702,27 @@ def ExtractFeatures(image):
     features['Busyness'],features['Number_of_Contours'] = CalcBusyness(gray)
     
     return features
+
+def ClassifyImage(image):
+    ''''Calculates the probability that an image is "high quality."
+
+    Keyword Arguments:
+    image -- The BGR image collected by UrlToImage()
+    
+    Output:
+    high_qual_class -- The predicted class of the image. "True" if the image is classified as high quality.
+    high_qual_prob -- The probability of an image belonging to the high quality class.
+    '''
+
+    with open('image_classifier.pkl', 'rb') as f:
+        clf = pickle.load(f)
+    with open('image_classifier_features.pkl', 'rb') as f:
+        image_classifier_features = pickle.load(f)
+
+    #Extract features and use classifier to predict probability of high quality
+    feats = ExtractFeatures(image)
+    feats = pd.DataFrame(feats,index=[0])
+    high_qual_class = clf.predict(feats[image_classifier_features])[0]
+    high_qual_prob  = clf.predict_proba(feats[image_classifier_features])[0][1]
+
+    return high_qual_class, high_qual_prob
