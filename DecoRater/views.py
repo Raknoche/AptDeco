@@ -67,7 +67,8 @@ def get_images():
     file.save(file_save_path)
 
     #Rate the image using our model
-    image=cv2.imread(file_save_path)
+    image = cv2.imread(file_save_path)
+    image = CropImage(image)
     feats = ExtractFeatures(image)
     feats = pd.DataFrame(feats,index=[0])
     front_page_prob = clf.predict_proba(feats[image_classifier_features])[0][1]        
