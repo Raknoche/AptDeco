@@ -1,7 +1,6 @@
 # DecoRater
 
-My name is Richard Knoche, and I created DecoRater over three weeks while working at Insight Data Science. DecoRater was created for the peer-to-peer furniture resale website, AptDeco.com. The editors at AptDeco spend a large amount of time sifting through user uploaded images to determine which ones should be displayed on the front page of each listing. DecoRater automatically quantifies the quality of each image, allowing editors to reduce the time spent looking at low quality images by 40%.
-
+My name is Richard Knoche, and I created DecoRater over three weeks while working at Insight Data Science. DecoRater was created for the peer-to-peer furniture resale website, AptDeco.com. The editors at AptDeco spend a large amount of time sifting through user uploaded images to determine which ones should be displayed on the front page of each listing. DecoRater automatically assesses the quality of each image, allowing editors to reduce the time spent looking at low quality images by 40%, and saving an estimated $10,000 annually.
 
 I was initially drawn to this project by the abstract nature of the problem. While there are some aspects of images which are easily quantified, the overall quality of an image is inherently subjective. I worked closely with the AptDeco team to understand what a “high quality” image meant to their editing team, and engineered over 60 features to treat these subjective opinions in a quantitative way.
 
