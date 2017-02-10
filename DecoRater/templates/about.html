@@ -6,16 +6,19 @@
     <h1>About the Project:</h1>
 
     <p>
-        My name is Richard Knoche, and I created DecoRater over three weeks while working at Insight Data Science.  DecoRater was created for the peer-to-peer furniture resale website, AptDeco.com.  The editors at AptDeco spend an inordinate amount of time sifting through user uploaded images to determine which ones should be displayed on the front page of each listing.  DecoRater automatically quantifies the quality of each image, allowing editors to improve their efficiency by 35%.
+        My name is Richard Knoche, and I created DecoRater over three weeks while working at Insight Data Science.  DecoRater was created for the peer-to-peer furniture resale website, <a href=AptDeco.com>AptDeco.com</a>.  The website simplifies the resale process by handling all of the logistics for its users. The AptDeco team fills in any missing details about the furniture, creates high quality listings on their website, and even delivers the furniture when it’s purchased.
     </p>
     <p>
-        I was initially drawn to this project by the abstract nature of the problem.  While there are some aspects of images which are easily quantified, the overall quality of an image is inherently subjective.  I worked closely with the AptDeco team to understand what a “high quality” image meant to their editing team, and engineered over 60 features to treat these subjective opinions in a quantitative way.
+        The first step of creating a listing on AptDeco is to submit a picture of the furniture. The editors at AptDeco will review the pictures, and decide if they are of high enough quality to be edited and displayed on the front page of the listing. Unfortunately, 75% of the submitted images are low quality, and can’t be displayed on the front of a listing. This means that AptDeco’s team spends a large amount of time sifting through low quality pictures and requesting improvements from their users. In addition to the amount of time this takes, some users never submit better images, leading to a lost sale for AptDeco and its users.
+    </p>
+    <p>
+        With this in mind, I created DecoRater — an algorithm for automatically assessing the quality of furniture images on AptDeco.com. DecoRater provides immediate feedback to AptDeco users, increasing the odds that they will submit high quality images for their listings. DecoRater can also be used behind the scenes, to reduce the number of low-quality photos that the AptDeco team has to sift through, and to flag listings which are in high need of editor intervention.
     </p>
 
     <h1>How It Works:</h1>
 
     <p>
-        DecoRater was built using AptDeco’s MySQL database of half a million images.  The quality of an image is determined by a AdaBoost Random Forest classification model which outputs the probability that the editors will use an image for the front page of a listing.  The classifier uses quantified information about each image’s dimensions, sharpness, colorfulness, focal points, and symmetry to compute this probability.  For a more detailed discussion about these features, please see my <a href="#">blog post</a>.
+        DecoRater was built using AptDeco’s MySQL database of half a million images.  The quality of an image is determined by a AdaBoost Random Forest Classifier which outputs the probability that the editors will use an image for the front page of a listing.  The classifier uses over 60 hand-crafted features to compute this probability.  For a more detailed discussion, please see my <a href="http://www.dealingdata.net/2017/02/05/Automatic-Image-Quality-Assessment/">blog post</a>.
     </p>
     <p>
         Behind the scenes, DecoRater is coded in Python, and makes use of the OpenCV, Pandas, NumPy, and Scikit-Learn libraries.  This website is hosted on AWS, and implemented with Flask, Bootstrap, JavaScript, and JQuery.

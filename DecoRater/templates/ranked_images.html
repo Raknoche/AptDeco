@@ -1,6 +1,14 @@
 {% extends "header.html" %}
 {% block content %}
 
+
+{% if all_low_quality %}
+  <div class ="alert alert-danger alert-dismissible" role="alert">
+      WARNING: None of the uploaded images are suitable for display on the front page of a listing.
+      Please upload higher quality images.  Well lit, front facing, symmetric images are ideal.  Please avoid the glare of bright lights in the background, and keep the image free of too many spurious objects.  
+  </div>
+{% endif %}
+
 <center>
   <div id="myCarousel" class="carousel slide container" data-ride="carousel" data-interval="false" style="width: 500px;">
       <!-- Carousel indicators -->
@@ -13,12 +21,12 @@
       <div class="carousel-inner" >
           {% for image, stars in user_images %}
             <div class="item {% if loop.index==1 %}active{%endif%}">
-                <img src="static/userImages/{{image}}" style="height: 400px; width: 400px;">
+                <img src="static/userImages/{{image}}" style="height: 400px; width: 400px; ">
 
                 {% if stars > 2.5 %}
-                  <span> This image is suitable for editing <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> </span>
+                  <span> <font size="5">This image is suitable for editing <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true" style="color:#418e4e"></span> </font></span>
                 {% else %}
-                  <span> This image is not suitable for editing <span class="glyphicon glyphicon-thumbs-down" aria-hidden="true"></span> </span>
+                  <span> <font size="5">This image is not suitable for editing <span class="glyphicon glyphicon-thumbs-down" aria-hidden="true" style="color:#bc362d"></span> </font></span>
                 {% endif %}      
 
                 <!--Star Rating -->

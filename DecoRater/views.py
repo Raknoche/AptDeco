@@ -112,7 +112,12 @@ def rank_images():
                 stars = prob*5
                 sorted_stars.append(stars)
 
-        return render_template("ranked_images.html", user_images=list(zip(sorted_images,sorted_stars)) )
+        if max(sorted_stars) < 2.5:
+            all_low_quality = 1
+        else:
+            all_low_quality = 0
+
+        return render_template("ranked_images.html", user_images=list(zip(sorted_images,sorted_stars)), all_low_quality =  all_low_quality)
     else:
         flash('Please upload at least one jpg, png, or gif file before submitting.')
         return redirect(url_for('index'))
