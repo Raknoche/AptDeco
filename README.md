@@ -31,7 +31,7 @@ pip install pymysql
 
 ### Usage
 
-ImageFeatures.py contains the bulk of the DecoRater code base.  The majority of function within ImageFeatures.py are used to extract quantitative features from an image.  You can import the entire library to a python session using
+ImageFeatures.py contains the bulk of the DecoRater code base.  The majority of functions within ImageFeatures.py are used to extract quantitative features from an image.  You can import the entire library to a python session using
 
 ```
 from ImageFeatures import *

@@ -5,15 +5,42 @@
 {% block content %}
 
 <!-- Summary of the App -->
-<div class="container">
+<div class="container" style="font-size:16px;">
     <center>
         <p>Welcome to DecoRater.  This app is designed to automatically assess the quality of furniture images for <a href="https://www.aptdeco.com/">AptDeco.com</a>.</p>
-        <p>Click or drag a jpg, png, or gif below to upload your images. After the files upload, click "Submit" to see the results.  The website will automatically order the images from highest quality to lowest quality, and assign a five star rating to each picture.  The results will also indicate if an image is suitable for display on the front page of an AptDeco furniture listing.  If none of the images are suitable for display on the front page of a listing, a warning will be displayed with suggest improvements.</p>
+
+        <br>
+        <p><b><u>Use DecoRater with these three simple steps:</b></u></p>
     </center>
+
+        <div class="row">
+            <div class="col-md-offset-1 col-md-10"> 
+                1. <span class="text-info"><b>Upload your images</b></span> by dragging them to the box below.  Alternatively, click on the box to select files from your computer. Each image will indicate when it's been successfully uploaded. (jpg, png, or gif formats accepted)
+            </div>
+        </div>
+
+        <br>
+
+        <div class="row">
+            <div class="col-md-offset-1 col-md-10"> 
+                2. <span class="text-info"><b>Click "Submit"</b></span> after your images have uploaded.
+            </div>
+        </div>
+
+        <br>
+
+        <div class="row">
+            <div class="col-md-offset-1 col-md-10"> 
+                3. <span class="text-info"><b>See your results!</b></span> We'll order your images from highest to lowest quality, and assign 0-5 star rating to each picture. The results will also indicate if an image is suitable for display on the front page of an AptDeco furniture listing. If none of your images are suitable for display on the front page of a listing, a warning will be displayed with suggested improvements to the pictures.
+            </div>
+        </div>
+
+        <br>
+
 </div>
 
 <!-- File Dropzone -->
-<center><h1>Drop Your Images Here</h1></center>
+<center><h1>Drop Your Images Below</h1></center>
 <form action="/get_images"
       class="dropzone"
       id="my-awesome-dropzone"></form>
@@ -24,7 +51,7 @@
     <center>
         <div class="col-md-offset-1 col-md-10"> 
             <form action="{{url_for('rank_images')}}" method="get">
-                <p>Don't have pictures of furnitures lying around?  You can <a href="https://www.dropbox.com/sh/tetm45rgyf3jegz/AADnVljZzpPtvdb3e_o7_wBga?dl=0">use this link</a> to download a small set of examples from dropbox.
+                <p>Don't have pictures of furniture lying around?  You can <a href="https://www.dropbox.com/sh/tetm45rgyf3jegz/AADnVljZzpPtvdb3e_o7_wBga?dl=0">use this link</a> to download a small set of examples from dropbox.
                 <br>
                 <br>
                 <button type="submit" class="btn btn-primary btn-lg" role="button">Submit Images</button>
