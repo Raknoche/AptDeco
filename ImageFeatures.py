@@ -326,6 +326,9 @@ def ComplimentaryColors(h_rad):
     Output:
     color_compliment -- The level of complimentary colors in the image.
                         Ranges from 0 to 1, with 1 being completely complementary.
+
+    Source:
+    https://github.com/kumbhani/PicSift
     '''
 
     color_compliment = np.abs(np.exp(2*h_rad*1j).sum() / len(h_rad.flatten()))
@@ -443,8 +446,8 @@ def RuleOfThirdsMask(single_channel):
     above_first_thrd_rows  = np.int(first_thrd_rows - np.floor(nrows/margin))
     below_first_thrd_rows  = np.int(first_thrd_rows + np.floor(nrows/margin))
 
-    above_second_thrd_rows = np.int(second_thrd_rows - np.floor(nrows/margin)) #_i
-    below_second_thrd_rows = np.int(second_thrd_rows + np.floor(nrows/margin)) #_o
+    above_second_thrd_rows = np.int(second_thrd_rows - np.floor(nrows/margin))
+    below_second_thrd_rows = np.int(second_thrd_rows + np.floor(nrows/margin))
 
     left_first_thrd_cols   = np.int(first_thrd_cols - np.floor(ncols/margin))
     right_first_thrd_cols  = np.int(first_thrd_cols + np.floor(ncols/margin))
